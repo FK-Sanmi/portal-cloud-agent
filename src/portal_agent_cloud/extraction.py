@@ -4,15 +4,12 @@ import os
 from pathlib import Path
 
 from .config import AppConfig
+from .documents import ensure_law_pdf
 from .gemini import extract_instructions
 
 
 def instruction_path(config: AppConfig, portal_number: int) -> Path:
     return config.portal_prompts_dir / f"portal_instructions_{portal_number}.md"
-
-
-def pdf_path(config: AppConfig, law_number: int) -> Path:
-    return config.downloads_dir / f"LAW-{law_number}.pdf"
 
 
 def prompt_path(config: AppConfig) -> Path:
@@ -35,7 +32,7 @@ def ensure_portal_instructions(
         )
         return output_path
 
-    pdf = pdf_path(config, law_number)
+    pdf = ensure_law_pdf(config=config, law_number=law_number, dry_run=dry_run)
     prompt_file = prompt_path(config)
     if dry_run:
         print("Instruction extraction")

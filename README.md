@@ -16,17 +16,19 @@ This project is the team-friendly cloud version of the local portal automation w
 
 ## Setup
 
-Download the Jira ZIP file for the portal task first. Extract the ZIP and put the generated law PDF in this repo's `downloads/` directory using this filename format:
+Download the Jira ZIP file for the portal task first and put it in this repo's `downloads/` directory using this filename format:
 
 ```text
-downloads/LAW-<law-number>.pdf
+downloads/LAW-<law-number>.zip
 ```
 
 For example, for law `1154`:
 
 ```text
-downloads/LAW-1154.pdf
+downloads/LAW-1154.zip
 ```
+
+The command will turn that ZIP into `downloads/LAW-<law-number>.pdf` automatically. If the ZIP contains one PDF, it copies that PDF. If the ZIP contains image pages, it converts the images into a PDF.
 
 Then install dependencies and create your local `.env` file:
 
@@ -89,18 +91,19 @@ uv run portal-cloud-agent --law 1154 --portal 575 --branch portal_575_test
 
 1. Loads config and `.env` values.
 2. Reuses `portal_instructions_<portal>.md` if it already exists.
-3. Otherwise uploads `LAW-<law>.pdf` with the official Gemini SDK and sends it with `gemini_extraction_prompt.md` to Gemini.
-4. Builds a Cursor Cloud prompt from:
+3. Otherwise creates `downloads/LAW-<law>.pdf` from `downloads/LAW-<law>.zip` when the PDF does not already exist.
+4. Uploads `LAW-<law>.pdf` with the official Gemini SDK and sends it with `gemini_extraction_prompt.md` to Gemini.
+5. Builds a Cursor Cloud prompt from:
    - `agent_implementation_prompt_basic.md`
    - `portal_instructions_<portal>.md`
    - `review.md`
-5. Calls `POST https://api.cursor.com/v1/agents` with:
+6. Calls `POST https://api.cursor.com/v1/agents` with:
    - repository URL
    - base branch
    - branch name
    - Cursor model
    - `autoCreatePR: true`
-6. Prints the Cloud Agent URL, branch, agent ID, and run ID.
+7. Prints the Cloud Agent URL, branch, agent ID, and run ID.
 
 ## Defaults
 
@@ -124,5 +127,6 @@ Omit `downloads_dir` and `jimmy_dir` to use this repo's bundled `downloads/` dir
 - Prompt templates live in this repo under `portal_prompts/` and are embedded into the API request.
 - Generated `portal_instructions_<portal>.md` files are written to `portal_prompts/` by default.
 - Generated `portal_instructions_*.md` files are ignored by git because they are run-specific artifacts.
+- Downloaded ZIP files and generated PDFs in `downloads/` are ignored by git.
 - The PDF itself is not uploaded to Cursor Cloud. Only generated portal instructions are embedded in the Cursor prompt.
 - PR creation is handled by Cursor Cloud via `autoCreatePR: true`.
