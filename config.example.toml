@@ -1,0 +1,5 @@
+repo_url = "https://github.com/filerskeepers-main/jimmy-v4"
+base_branch = "main"
+extraction_model = "gemini-3.1-pro"
+cursor_model = "gpt-5.5-high"
+extraction_timeout = 240
