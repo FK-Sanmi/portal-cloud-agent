@@ -13,19 +13,7 @@ from .extraction import ensure_portal_instructions
 from .prompts import build_cloud_prompt
 
 
-app = typer.Typer(
-    help="Launch Cursor Cloud Agents for Jimmy portal implementations.",
-    no_args_is_help=True,
-)
-
-
-@app.callback()
-def root() -> None:
-    """Launch Cursor Cloud Agents for Jimmy portal implementations."""
-
-
-@app.command(help="Generate instructions and launch a Cloud Agent.")
-def cloud(
+def run(
     law: Annotated[int, typer.Option("--law", min=1, help="LAW number, e.g. 1154")],
     portal: Annotated[
         int,
@@ -156,7 +144,7 @@ def _run_cloud(
 
 
 def main() -> None:
-    app()
+    typer.run(run)
 
 
 if __name__ == "__main__":

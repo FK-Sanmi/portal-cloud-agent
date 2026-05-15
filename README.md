@@ -16,6 +16,20 @@ This project is the team-friendly cloud version of the local portal automation w
 
 ## Setup
 
+Download the Jira ZIP file for the portal task first. Extract the ZIP and put the generated law PDF in this repo's `downloads/` directory using this filename format:
+
+```text
+downloads/LAW-<law-number>.pdf
+```
+
+For example, for law `1154`:
+
+```text
+downloads/LAW-1154.pdf
+```
+
+Then install dependencies and create your local `.env` file:
+
 ```bash
 uv sync
 cp .env.example .env
@@ -28,7 +42,7 @@ GEMINI_API_KEY=...
 CURSOR_API_KEY=...
 ```
 
-Put downloaded or generated `LAW-<number>.pdf` files in this repo's `downloads/` directory, or override `PORTAL_AGENT_DOWNLOADS_DIR` / `downloads_dir` if you prefer another location.
+If you prefer another download location, override `PORTAL_AGENT_DOWNLOADS_DIR` / `downloads_dir`.
 
 Optional config file:
 
@@ -41,28 +55,34 @@ Environment variables override `config.toml`.
 
 ## Usage
 
+General format:
+
+```bash
+uv run portal-cloud-agent --law <law-number> --portal <portal-number>
+```
+
 Dry-run first:
 
 ```bash
-uv run portal-cloud cloud --law 1154 --portal 575 --dry-run
+uv run portal-cloud-agent --law 1154 --portal 575 --dry-run
 ```
 
 Launch a cloud agent and let Cursor open the PR:
 
 ```bash
-uv run portal-cloud cloud --law 1154 --portal 575
+uv run portal-cloud-agent --law 1154 --portal 575
 ```
 
 Force regeneration of portal instructions:
 
 ```bash
-uv run portal-cloud cloud --law 1154 --portal 575 --force-instructions
+uv run portal-cloud-agent --law 1154 --portal 575 --force-instructions
 ```
 
 Use a custom branch name:
 
 ```bash
-uv run portal-cloud cloud --law 1154 --portal 575 --branch portal_575_test
+uv run portal-cloud-agent --law 1154 --portal 575 --branch portal_575_test
 ```
 
 ## What The Command Does
